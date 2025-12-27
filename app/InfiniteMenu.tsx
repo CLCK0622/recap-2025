@@ -854,9 +854,10 @@ const InfiniteMenu: FC<InfiniteMenuProps> = ({items = [], scale = 1.0}) => {
 
             {activeItem && (
                 <>
-                    {/* 1. 桌面端标题 (Desktop Title)
-                        添加了 hidden md:block，这样在移动端会隐藏
-                    */}
+                    {/* =========================================================
+                        DESKTOP UI (大屏端布局 - 左右分布)
+                        使用 hidden lg:block 仅在桌面显示
+                       ========================================================= */}
                     <h2
                         className={`
                           hidden lg:block 
@@ -882,9 +883,6 @@ const InfiniteMenu: FC<InfiniteMenuProps> = ({items = [], scale = 1.0}) => {
                         {activeItem.title}
                     </h2>
 
-                    {/* 2. 桌面端描述 (Desktop Description)
-                        添加了 hidden md:block
-                    */}
                     <p
                         className={`
                           hidden lg:block
@@ -907,142 +905,128 @@ const InfiniteMenu: FC<InfiniteMenuProps> = ({items = [], scale = 1.0}) => {
                         {activeItem.description}
                     </p>
 
-                    {/* =========================================================
-                桌面端逻辑 (保持深蓝色大箭头，只在 Desktop 显示)
-               ========================================================= */}
                     {activeItem.link && (
                         <div
                             onClick={handleButtonClick}
                             className={`
-                        hidden lg:grid  /* 关键：移动端隐藏，桌面端网格布局 */
-                        absolute
-                        left-1/2
-                        z-10
-                        w-[60px]
-                        h-[60px]
-                        place-items-center
-                        bg-[#00008b] 
-                        border-[4px]
-                        border-white/30
-                        hover:border-white
-                        rounded-full
-                        cursor-pointer
-                        transition-all
-                        ease-[cubic-bezier(0.25,0.1,0.25,1.0)]
-                        hover:scale-110
-                        ${
+                                hidden lg:grid
+                                absolute
+                                left-1/2
+                                z-10
+                                w-[60px]
+                                h-[60px]
+                                place-items-center
+                                bg-[#00008b] 
+                                border-[4px]
+                                border-white/30
+                                hover:border-white
+                                rounded-full
+                                cursor-pointer
+                                transition-all
+                                ease-[cubic-bezier(0.25,0.1,0.25,1.0)]
+                                hover:scale-110
+                                ${
                                 isMoving
                                     ? 'bottom-[-80px] opacity-0 pointer-events-none duration-[100ms] scale-0 -translate-x-1/2'
                                     : 'bottom-[3.8em] opacity-100 pointer-events-auto duration-[500ms] scale-100 -translate-x-1/2'
                             }
-                    `}
+                            `}
                         >
                             <FaArrowRight className="text-white text-2xl rotate-[-45deg]" />
                         </div>
                     )}
 
                     {/* =========================================================
-                移动端逻辑 (新的：两个按钮并排，都用磨砂玻璃样式)
-               ========================================================= */}
-                    <div
+                        MOBILE UI (移动端布局 - 上下分布)
+                        使用 lg:hidden 仅在移动端显示
+                       ========================================================= */}
+
+                    {/* 1. 移动端标题：位于上方 Top 12% */}
+                    <h2
                         className={`
-                    lg:hidden /* 关键：只在移动端显示 */
-                    absolute
-                    left-1/2
-                    z-20
-                    flex      /* 启用 Flex 布局使按钮并排 */
-                    gap-6     /* 两个按钮之间的间距 */
-                    -translate-x-1/2
-                    transition-all
-                    ease-[cubic-bezier(0.25,0.1,0.25,1.0)]
-                    ${
+                          lg:hidden
+                          select-none
+                          absolute
+                          top-[10%]
+                          left-1/2
+                          -translate-x-1/2
+                          font-mono
+                          text-white
+                          text-4xl
+                          text-center
+                          w-full
+                          px-4
+                          z-10
+                          transition-all
+                          ease-[cubic-bezier(0.25,0.1,0.25,1.0)]
+                          ${
                             isMoving
-                                ? 'bottom-[-80px] opacity-0 pointer-events-none duration-[100ms]'
-                                : 'bottom-[10%] opacity-100 pointer-events-auto duration-[500ms]'
+                                ? 'opacity-0 translate-y-[-20px] duration-[100ms]'
+                                : 'opacity-100 translate-y-0 duration-[500ms]'
                         }
-                `}
+                        `}
                     >
-                        {/* 按钮 1: 查看详情 (小窗口图标) */}
+                        {activeItem.title}
+                    </h2>
+
+                    {/* 2. 移动端描述：位于下方 Bottom 20% (给按钮留出空间) */}
+                    <p
+                        className={`
+                          lg:hidden
+                          select-none
+                          absolute
+                          bottom-[10%]
+                          left-1/2
+                          -translate-x-1/2
+                          text-gray-200
+                          text-center
+                          text-lg
+                          max-w-[85%]
+                          z-10
+                          leading-relaxed
+                          transition-all
+                          ease-[cubic-bezier(0.25,0.1,0.25,1.0)]
+                          ${
+                            isMoving
+                                ? 'opacity-0 translate-y-[20px] duration-[100ms]'
+                                : 'opacity-100 translate-y-0 duration-[500ms]'
+                        }
+                        `}
+                    >
+                        {activeItem.description}
+                    </p>
+
+                    {/* 3. 移动端按钮：位于最下方 Bottom 8% */}
+                    {activeItem.link && (
                         <div
-                            onClick={() => setShowMobileInfo(true)}
-                            className="
-                        w-[50px]
-                        h-[50px]
-                        grid
-                        place-items-center
-                        bg-white/10
-                        backdrop-blur-md
-                        border border-white/20
-                        rounded-full  /* 或者 rounded-4xl */
-                        cursor-pointer
-                        active:scale-90
-                        transition-transform
-                    "
+                            onClick={handleButtonClick}
+                            className={`
+                                lg:hidden
+                                absolute
+                                bottom-[20%]
+                                left-1/2
+                                -translate-x-1/2
+                                z-20
+                                w-[50px]
+                                h-[50px]
+                                grid
+                                place-items-center
+                                bg-white/10
+                                backdrop-blur-md
+                                border border-white/20
+                                rounded-full
+                                cursor-pointer
+                                active:scale-90
+                                transition-all
+                                ease-[cubic-bezier(0.25,0.1,0.25,1.0)]
+                                ${
+                                isMoving
+                                    ? 'opacity-0 scale-50 duration-[100ms]'
+                                    : 'opacity-100 scale-100 duration-[500ms]'
+                            }
+                            `}
                         >
-                            <TbAppWindow className="text-white text-2xl" />
-                        </div>
-
-                        {/* 按钮 2: 跳转链接 (箭头图标) - 只有存在链接时才显示 */}
-                        {activeItem.link && (
-                            <div
-                                onClick={handleButtonClick}
-                                className="
-                            w-[50px]
-                            h-[50px]
-                            grid
-                            place-items-center
-                            bg-white/10
-                            backdrop-blur-md
-                            border border-white/20
-                            rounded-full
-                            cursor-pointer
-                            active:scale-90
-                            transition-transform
-                        "
-                            >
-                                <FaArrowRight className="text-white text-xl rotate-[-45deg]" />
-                            </div>
-                        )}
-                    </div>
-
-                    {/* 5. 移动端模态框 (Mobile Modal)
-                        磨砂玻璃效果
-                    */}
-                    {showMobileInfo && (
-                        <div
-                            className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
-                            <div
-                                className="flex flex-col items-center justify-between relative w-full max-w-sm h-[90svh] rounded-2xl bg-white/10 p-6 text-white shadow-2xl ring-1 ring-white/20 backdrop-blur-xl">
-                                {/* 关闭按钮 */}
-                                <button
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        setShowMobileInfo(false);
-                                    }}
-                                    className="absolute top-4 right-4 text-white/70 hover:text-white transition-colors"
-                                >
-                                    <IoMdClose size={24}/>
-                                </button>
-
-                                {/* 内容 */}
-                                <div className="mt-2 text-center">
-                                    <h3 className="text-3xl font-bold tracking-tight text-white mb-2">
-                                        {activeItem.title}
-                                    </h3>
-                                    <p className="text-lg text-gray-300 mb-6 leading-relaxed">
-                                        {activeItem.description}
-                                    </p>
-                                </div>
-
-                                {activeItem.link &&
-                                    <button
-                                        onClick={handleButtonClick}
-                                        className="flex-end w-full rounded-lg bg-blue-600 px-4 py-3 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 transition-colors"
-                                    >
-                                        Visit Link
-                                    </button>
-                                }
-                            </div>
+                            <FaArrowRight className="text-white text-xl rotate-[-45deg]" />
                         </div>
                     )}
                 </>
